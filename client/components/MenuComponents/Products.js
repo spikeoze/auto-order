@@ -30,10 +30,17 @@ function Products() {
   
   if (!data)
     return (
-      <Loader
-        size="xl"
-        style={{ position: "absolute", top: "18rem", left: "45rem" }}
-      />
+      <div
+      style={{
+        display: "flex",
+        position: "relative",
+        top: "18rem",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Loader size="xl" />
+    </div>
     );
   return (
     <>

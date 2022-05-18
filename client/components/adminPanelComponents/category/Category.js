@@ -7,7 +7,6 @@ import {
   Input,
   Table,
   Button,
-  Checkbox,
   Affix,
   Transition,
   Tooltip,
@@ -34,6 +33,7 @@ function Category({ categories }) {
 
   const [scroll, scrollTo] = useWindowScroll();
 
+  // tables rows of category list
   const rows = categories.map((category) => (
     <tr key={category.cuid}>
       <td>
