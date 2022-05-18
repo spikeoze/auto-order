@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Products {
+  id          Int      @id @default(autoincrement())
+  cuid        String   @unique @default(cuid())
+  name        String   @db.VarChar(50)
+  price       Decimal  @db.Decimal(12, 2)
+  image_name  String?  @db.Text
+  image_type  String?  @db.Text
+  image_data  Bytes?   @db.ByteA
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  category_id Int
+
+  category Category @relation(fields: [category_id], references: [id])
+
+  orders OrderList[]
+
+  @@map("products")
+}
+
+model OrderList {
+  id          Int       @id @default(autoincrement())
+  cuid        String    @unique @default(cuid())
+  customer_id Int
+  status      Status
+  product_id  Int
+  sub_total   Decimal   @db.Decimal(12, 2)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  customer    Customers @relation(fields: [customer_id], references: [id])
+  product     Products  @relation(fields: [product_id], references: [id])
+
+  @@map("order_list")
+}
+
+model Category {
+  id        Int        @id @default(autoincrement())
+  cuid      String     @unique @default(cuid())
+  name      String     @db.VarChar(50)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  products  Products[]
+
+  @@map("category")
+}
+
+model Customers {
+  id        Int         @id @default(autoincrement())
+  cuid      String      @unique @default(cuid())
+  name      String      @db.VarChar(50)
+  email     String?     @unique
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+  order     OrderList[]
+
+  @@map("customer")
+}
+
+enum Status {
+  PREPARING
+  READY
+}

@@ -1,0 +1,35 @@
+.product {
+  width: auto;
+  margin: 0.5rem;
+}
+
+.productSections {
+  width: auto;
+  height: auto;
+  padding: 1rem;
+  box-shadow: var(--firm-shadow);
+}
+
+.inputs {
+  width: 100%;
+}
+
+.btn {
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.modalBtn {
+  display: flex;
+  justify-content:flex-end;
+}
+
+@media screen and (max-width: 1250px) {
+  .inputs {
+    width: 100%;
+  }
+  .btn2 {
+    margin: 1rem 0rem;
+    width: 100%;
+  }
+}

@@ -1,0 +1,30 @@
+Admin panel:
+	- Create product:
+		> name
+		> category (A table) (Many2Many, Tags)
+		> price
+		> extra ids (extra, additional price, default extras (boolean)) (One2Many) (ex: extra cheese)
+	
+	- Order List
+		> customer id
+		> date
+		> status
+   		> product ids
+		> sub total
+		> paid (boolean)  ?? Orders go through only when they are paid for
+
+	- Customers 
+		> name
+		> phone
+		> email (optional)
+	
+
+	- Configration
+		- Extras 
+			> name
+		- Category
+			> name
+			> display name 
+			> parent (Many2One) (selection from the category table)
+
+

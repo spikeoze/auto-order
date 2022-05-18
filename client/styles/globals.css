@@ -1,0 +1,62 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap");
+
+:root {
+  /* Colors */
+  --main-color: #fafafa;
+  --sidebar-color: #005691;
+  --shadow-color: #004a7c;
+  --other-color: #e8f1f5;
+  /* font */
+  --main-font: "Inter", sans-serif;
+  /* Uitilities */
+  --light-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px,
+    rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+  --dark-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  --firm-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+
+.trash{
+  font-size: 20px;
+  color:  #f74c4c;
+  cursor: pointer;
+}
+
+.trash:hover{
+  color:#FF8080 ;
+}
+
+.edit{
+  cursor:pointer;
+  font-size:20px;
+  color:  #0080e2;
+}
+
+.edit:hover{
+  color: #72bffa;
+}
+
+
+.navAndHead{
+  background-color: #F3F9FB;
+  box-shadow: var(--firm-shadow);
+}
