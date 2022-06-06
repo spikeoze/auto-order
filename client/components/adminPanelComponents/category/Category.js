@@ -11,6 +11,7 @@ import {
   Transition,
   Tooltip,
   Modal,
+  Select,
 } from "@mantine/core";
 import { BiTrashAlt, BiPencil, BiCog } from "react-icons/bi";
 import { useWindowScroll } from "@mantine/hooks";
@@ -29,9 +30,15 @@ function Category({ categories }) {
     CUID,
     setCategoryName,
     CategoryName,
+    SubCategoryName,
+    setSubCategoryName,
+    postSubCategory
   } = useCategoryContext();
 
   const [scroll, scrollTo] = useWindowScroll();
+  const categoryList = categories.map((category) => category.name);
+  // console.log(categoryList);
+  // console.log(CategoryName);
 
   // tables rows of category list
   const rows = categories.map((category) => (
@@ -86,13 +93,26 @@ function Category({ categories }) {
               }}
             >
               <h2>Add Category</h2>
-              <InputWrapper id="input-demo" required label="Name">
-                <Input
+              <InputWrapper label="Category">
+                <Select
+                  data={categoryList}
+                  searchable
                   required
                   placeholder="Category Name"
                   className={style.inputs}
                   value={CategoryName}
-                  onChange={(e) => setCategoryName(e.target.value)}
+                  creatable
+                  getCreateLabel={(query) => `+ Create ${query}`}
+                  onChange={(category) => setCategoryName(category)}
+                  onCreate={(query) => postCategory(query)}
+                />
+              </InputWrapper>
+              <InputWrapper label="Subcategory">
+                <Input
+                  placeholder="Sub-category Name"
+                  className={style.inputs}
+                  value={SubCategoryName}
+                  onChange={(e) => setSubCategoryName(e.target.value)}
                 />
               </InputWrapper>
 
@@ -108,7 +128,7 @@ function Category({ categories }) {
                 <Button
                   variant="outline"
                   className={style.btn}
-                  onClick={() => postCategory(CategoryName)}
+                  onClick={() => postSubCategory(CategoryName, SubCategoryName)}
                 >
                   Add
                 </Button>

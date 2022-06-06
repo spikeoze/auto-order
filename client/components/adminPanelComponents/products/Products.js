@@ -48,6 +48,9 @@ function Products({ categories }) {
     setName,
     setPrice,
     setCategory,
+    setImage,
+    setOpened,
+    setModalImgData,
   } = useProductsContext();
 
   const [scroll, scrollTo] = useWindowScroll();
@@ -73,7 +76,6 @@ function Products({ categories }) {
     );
 
   const categoryList = categories.map((category) => category.name);
-
   const rows = data.map((product) => (
     <tr key={product.cuid}>
       <td>
@@ -93,7 +95,10 @@ function Products({ categories }) {
       </td>
       <td>{product.name}</td>
       <td>{currency(product.price, { precision: 2 }).format()}</td>
-      <td>{product.category.name}</td>
+      <td>
+        {product.category.name}
+        {product.category.parent ? ` / ${product.category.parent.name}` : ""}
+      </td>
       <td>
         <Tooltip
           withArrow

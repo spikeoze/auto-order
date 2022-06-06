@@ -21,6 +21,7 @@ const getProducts = async (req, res) => {
         category: {
           select: {
             name: true,
+            parent:true
           },
         },
       },

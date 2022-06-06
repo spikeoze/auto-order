@@ -49,9 +49,17 @@ model Category {
   id        Int        @id @default(autoincrement())
   cuid      String     @unique @default(cuid())
   name      String     @db.VarChar(50)
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  products  Products[]
+  
+  parent_id Int?
+  parent    Category?  @relation("sub_category", fields: [parent_id], references: [id])
+  sub_category  Category[] @relation("sub_category")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+
+  products Products[]
+
 
   @@map("category")
 }

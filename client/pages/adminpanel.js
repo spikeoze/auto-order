@@ -16,6 +16,8 @@ function adminpanel() {
     { refreshInterval: 500 }
   );
 
+  // console.log(data);
+
   if (!data)
     return (
       <div

@@ -5,15 +5,28 @@ import axios from "axios";
 const CategoryProvider = ({ children }) => {
   const [formOpened, setFormOpened] = React.useState(false);
   const [CategoryName, setCategoryName] = React.useState("");
+  const [SubCategoryName, setSubCategoryName] = React.useState("");
   const [CUID, setCUID] = React.useState("");
   const [Editing, setEditing] = React.useState(false);
 
   const postCategory = async (name) => {
-    if (!CategoryName) console.log("Name is required");
+    if (!name) console.log("Name is required");
     axios.post("http://localhost:8080/adminpanel/category", { name });
+    // console.log(name);
     setCategoryName("");
-    setFormOpened(false);
+    // setSubCategoryName("")
+    // setFormOpened(false);
   };
+
+  const postSubCategory = async (name, subCategory) => {
+    if (!name) console.log("Name is required");
+    axios.post("http://localhost:8080/adminpanel/category", { name, subCategory });
+    // console.log(name);
+    setCategoryName("");
+    setSubCategoryName("")
+    // setFormOpened(false);
+  };
+
 
   const editHandler = (cuid, name) => {
     setCUID(cuid);
@@ -51,6 +64,9 @@ const CategoryProvider = ({ children }) => {
         CUID,
         setCategoryName,
         CategoryName,
+        SubCategoryName,
+        setSubCategoryName,
+        postSubCategory
       }}
     >
       {children}

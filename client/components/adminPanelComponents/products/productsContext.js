@@ -115,6 +115,9 @@ const ProductsProvider = ({ children }) => {
         setName,
         setPrice,
         setCategory,
+        setImage,
+        setOpened,
+        setModalImgData,
       }}
     >
       {children}

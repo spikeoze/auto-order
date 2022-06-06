@@ -15,22 +15,35 @@ const getCategories = async (req, res) => {
     "Access-Control-Allow-Headers",
     "X-Requested-With,content-type"
   );
-  const category = await prisma.category.findMany();
+  const category = await prisma.category.findMany({
+    include: { parent: true },
+  });
   res.status(200).json(category);
 };
 
 // POST
 const postCategory = async (req, res) => {
-  const { name } = req.body;
+  const { name, subCategory } = req.body;
+  console.log(req.body);
   const existingCategory = await prisma.category.findFirst({
     where: { name },
   });
-  if (existingCategory) throw "category already exists";
-  const category = await prisma.category.create({
-    data: { name },
-  });
+  // if (existingCategory) throw "category already exists";
 
-  res.status(200).json(category);
+  const categoryOnly = async () => {
+    const category = await prisma.category.create({
+      data: { name },
+    });
+    res.status(200).json(category);
+  };
+  const categoryWithSub = async () => {
+    const category = await prisma.category.create({
+      data: { name: subCategory, parent_id: existingCategory.id },
+    });
+    res.status(200).json(category);
+  };
+
+  !subCategory ? categoryOnly() : categoryWithSub();
 };
 
 // PUT
