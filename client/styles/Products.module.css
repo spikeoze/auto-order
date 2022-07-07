@@ -8,6 +8,8 @@
   height: auto;
   padding: 1rem;
   box-shadow: var(--firm-shadow);
+  text-transform: capitalize;
+  font-weight: 500;
 }
 
 .inputs {

@@ -32,7 +32,7 @@ function Category({ categories }) {
     CategoryName,
     SubCategoryName,
     setSubCategoryName,
-    postSubCategory
+    postSubCategory,
   } = useCategoryContext();
 
   const [scroll, scrollTo] = useWindowScroll();
@@ -94,27 +94,38 @@ function Category({ categories }) {
             >
               <h2>Add Category</h2>
               <InputWrapper label="Category">
-                <Select
-                  data={categoryList}
-                  searchable
-                  required
-                  placeholder="Category Name"
-                  className={style.inputs}
-                  value={CategoryName}
-                  creatable
-                  getCreateLabel={(query) => `+ Create ${query}`}
-                  onChange={(category) => setCategoryName(category)}
-                  onCreate={(query) => postCategory(query)}
-                />
+                {!Editing ? (
+                  <Select
+                    data={categoryList}
+                    searchable
+                    required
+                    placeholder="Category Name"
+                    className={style.inputs}
+                    value={CategoryName}
+                    creatable
+                    getCreateLabel={(query) => `+ Create ${query}`}
+                    onChange={(category) => setCategoryName(category)}
+                    onCreate={(query) => postCategory(query)}
+                  />
+                ) : (
+                  <Input
+                    placeholder="Sub-category Name"
+                    className={style.inputs}
+                    value={CategoryName}
+                    onChange={(e) => setCategoryName(e.target.value)}
+                  />
+                )}
               </InputWrapper>
-              <InputWrapper label="Subcategory">
-                <Input
-                  placeholder="Sub-category Name"
-                  className={style.inputs}
-                  value={SubCategoryName}
-                  onChange={(e) => setSubCategoryName(e.target.value)}
-                />
-              </InputWrapper>
+              {!Editing && (
+                <InputWrapper label="Subcategory">
+                  <Input
+                    placeholder="Sub-category Name"
+                    className={style.inputs}
+                    value={SubCategoryName}
+                    onChange={(e) => setSubCategoryName(e.target.value)}
+                  />
+                </InputWrapper>
+              )}
 
               {Editing ? (
                 <Button
