@@ -1,44 +1,13 @@
 import React from "react";
-import Products from "../components/adminPanelComponents/products/Products";
-import Category from "../components/adminPanelComponents/category/Category";
-import { useGlobalContext } from "../components/context";
-import useSWR from "swr";
-import axios from "axios";
-import { Loader } from "@mantine/core";
-import Layout from "../components/Layout";
-
-const fetcher = (url) => axios.get(url).then((res) => res.data);
-function adminpanel() {
-  const { ProductsList, CategoryList } = useGlobalContext();
-  const { data, error } = useSWR(
-    "http://localhost:8080/adminpanel/category",
-    fetcher,
-    { refreshInterval: 500 }
-  );
-
-  // console.log(data);
-
-  if (!data)
-    return (
-      <div
-        style={{
-          display: "flex",
-          position:"relative",
-          top:"20rem",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Loader size="xl" />
-      </div>
-    );
-
+import AdminpanelLayout from "../components/layouts/AdminpanelLayout";
+function Adminpanel() {
   return (
-    <Layout>
-      {ProductsList && <Products categories={data} />}
-      {CategoryList && <Category categories={data} />}
-    </Layout>
+    <>
+      <AdminpanelLayout>
+       <h1>Admin panel home</h1>
+      </AdminpanelLayout>
+    </>
   );
 }
 
-export default adminpanel;
+export default Adminpanel;

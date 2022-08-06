@@ -8,7 +8,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      =" postgresql://postgres:spike1212@localhost:5432/auto_order?schema=public"
+  url      = " postgresql://postgres:spike1212@localhost:5432/auto_order?schema=public"
 }
 
 model Products {
@@ -30,6 +30,24 @@ model Products {
   @@map("products")
 }
 
+model Category {
+  id   Int    @id @default(autoincrement())
+  cuid String @unique @default(cuid())
+  name String @db.VarChar(50)
+
+  parent_id Int?
+  parent    Category? @relation("sub_category", fields: [parent_id], references: [id])
+
+  sub_category Category[] @relation("sub_category")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  products Products[]
+
+  @@map("category")
+}
+
 model OrderList {
   id          Int       @id @default(autoincrement())
   cuid        String    @unique @default(cuid())
@@ -43,25 +61,6 @@ model OrderList {
   product     Products  @relation(fields: [product_id], references: [id])
 
   @@map("order_list")
-}
-
-model Category {
-  id        Int        @id @default(autoincrement())
-  cuid      String     @unique @default(cuid())
-  name      String     @db.VarChar(50)
-  
-  parent_id Int?
-  parent    Category?  @relation("sub_category", fields: [parent_id], references: [id])
-  sub_category  Category[] @relation("sub_category")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-
-  products Products[]
-
-
-  @@map("category")
 }
 
 model Customers {

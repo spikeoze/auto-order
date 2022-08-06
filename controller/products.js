@@ -1,19 +1,10 @@
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
+const e = require("express");
 const prisma = new PrismaClient();
 
 // GET request handler
 const getProducts = async (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-
-  // Request methods you wish to allow
-  res.setHeader("Access-Control-Allow-Methods", "GET");
-
-  // Request headers you wish to allow
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
   const products = await prisma.products
     .findMany({
       orderBy: { createdAt: "asc" },
@@ -21,14 +12,14 @@ const getProducts = async (req, res) => {
         category: {
           select: {
             name: true,
-            parent:true
+            parent: true,
           },
         },
       },
     })
     .then((products) => {
       products.map((product) => {
-        const productImage = product.image_data.toString("base64");
+        const productImage = product.image_data?.toString("base64");
         product["image_data"] = productImage;
       });
       return products;
@@ -39,7 +30,7 @@ const getProducts = async (req, res) => {
 // POST Request handler
 const postProducts = async (req, res) => {
   const { name, price, category } = req.body;
-  const { image } = req.files;
+  // const { image } = req.files;
   // console.log(req.file);
 
   // Find the id of category
@@ -50,20 +41,24 @@ const postProducts = async (req, res) => {
   const existingProduct = await prisma.products.findFirst({
     where: { name },
   });
-  if (existingProduct) throw "product already exists";
+  if (existingProduct) {
+    res
+      .status(400)
+      .json({ message: "product with the same name already exists" });
+  } else {
+    const product = await prisma.products.create({
+      data: {
+        name,
+        price,
+        image_name: req.files?.image?.name,
+        image_type: req.files?.image?.mimetype,
+        image_data: req.files?.image?.data,
+        category: { connect: { id: getCategory.id } },
+      },
+    });
 
-  const product = await prisma.products.create({
-    data: {
-      name,
-      price,
-      image_name: image.name,
-      image_type: image.mimetype,
-      image_data: image.data,
-      category: { connect: { id: getCategory.id } },
-    },
-  });
-
-  res.status(200).json(product);
+    res.status(200).json(product);
+  }
 };
 
 // PUT Request Handler
@@ -77,20 +72,23 @@ const updateProducts = async (req, res) => {
 
   // if product does not exist
   let product = await prisma.products.findUnique({ where: { cuid } });
-  if (!product) throw "product not found";
-  product = await prisma.products.update({
-    where: { cuid },
-    data: {
-      name,
-      price,
-      image_name: req.files.image.name,
-      image_type: req.files.image.mimetype,
-      image_data: req.files.image.data,
-      category: { connect: { id: getCategory.id } },
-    },
-  });
+  if (!product) {
+    res.status(400).json({ message: "this prodocut does not exists" });
+  } else {
+    product = await prisma.products.update({
+      where: { cuid },
+      data: {
+        name,
+        price,
+        image_name: req.files?.image?.name,
+        image_type: req.files?.image?.mimetype,
+        image_data: req.files?.image?.data,
+        category: { connect: { id: getCategory.id } },
+      },
+    });
 
-  res.status(200).json(product);
+    res.status(200).json(product);
+  }
 };
 
 // Delete Request handler
@@ -98,10 +96,13 @@ const deleteProducts = async (req, res) => {
   const { cuid } = req.params;
   // if product does not exist
   let product = await prisma.products.findUnique({ where: { cuid } });
-  if (!product) throw "product not found";
-  product = await prisma.products.delete({ where: { cuid } });
+  if (!product) {
+    res.status(400).json({ message: "this prodocut does not exists" });
+  } else {
+    product = await prisma.products.delete({ where: { cuid } });
 
-  res.status(200).json({ message: "deleted " });
+    res.status(200).json({ message: "deleted " });
+  }
 };
 
 module.exports = {

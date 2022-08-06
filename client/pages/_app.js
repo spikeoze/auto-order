@@ -1,17 +1,32 @@
+import Layout from "../components/layouts/Layout";
 import "../styles/globals.css";
-import Layout from "../components/Layout";
-import { AppProvider } from "../components/context";
-import { CategoryProvider } from "../components/adminPanelComponents/category/categoryContext";
-import { ProductsProvider } from "../components/adminPanelComponents/products/productsContext";
+import { AppProvider } from "../contexts/globalContext";
+import { CategoryProvider } from "../contexts/categoryContext";
+import { ProductsProvider } from "../contexts/productsContext";
+
+import NProgress from "nprogress";
+import Router from "next/router";
+
 function MyApp({ Component, pageProps }) {
+  NProgress.configure({ showSpinner: false });
+
+  Router.events.on("routeChangeStart", () => {
+    NProgress.start();
+  });
+
+  Router.events.on("routeChangeComplete", () => {
+    NProgress.done();
+  });
   return (
-    <AppProvider>
+    <Layout>
+      {/* <AppProvider> */}
       <ProductsProvider>
         <CategoryProvider>
           <Component {...pageProps} />
         </CategoryProvider>
       </ProductsProvider>
-    </AppProvider>
+      {/* </AppProvider> */}
+    </Layout>
   );
 }
 

@@ -12,23 +12,20 @@ const {
 // middleware
 const {
   categoryValidateRules,
-  checkForValidation,
-} = require("../middleware/category");
-
+  schemaValidatorMiddlewere,
+} = require("../middleware/validateschemas");
 // Routes
 categoryRouter.get("/category", getCategories);
 
 categoryRouter.post(
   "/category",
-  categoryValidateRules,
-  checkForValidation,
+  schemaValidatorMiddlewere(categoryValidateRules),
   asyncHandler(postCategory)
 );
 
 categoryRouter.put(
   "/category/:cuid",
-  categoryValidateRules,
-  checkForValidation,
+  schemaValidatorMiddlewere(categoryValidateRules),
   asyncHandler(updateCategory)
 );
 

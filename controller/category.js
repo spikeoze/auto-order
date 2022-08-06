@@ -5,18 +5,8 @@ const asyncHandler = require("express-async-handler");
 
 // GET
 const getCategories = async (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-
-  // Request methods you wish to allow
-  res.setHeader("Access-Control-Allow-Methods", "GET");
-
-  // Request headers you wish to allow
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
   const category = await prisma.category.findMany({
-    include: { parent: true },
+    include: { parent: true, sub_category: true },
   });
   res.status(200).json(category);
 };
@@ -24,17 +14,26 @@ const getCategories = async (req, res) => {
 // POST
 const postCategory = async (req, res) => {
   const { name, subCategory } = req.body;
-  console.log(req.body);
+
   const existingCategory = await prisma.category.findFirst({
     where: { name },
   });
-  // if (existingCategory) throw "category already exists";
 
   const categoryOnly = async () => {
-    const category = await prisma.category.create({
-      data: { name },
+    const existingCategory = await prisma.category.findFirst({
+      where: { name },
     });
-    res.status(200).json(category);
+
+    if (existingCategory) {
+      res
+        .status(400)
+        .json({ message: "category with the same name already exists" });
+    } else {
+      const category = await prisma.category.create({
+        data: { name },
+      });
+      res.status(200).json(category);
+    }
   };
   const categoryWithSub = async () => {
     const category = await prisma.category.create({
@@ -55,23 +54,35 @@ const updateCategory = async (req, res) => {
   let existingCategory = await prisma.category.findFirst({
     where: { name },
   });
-  if (existingCategory) throw "category already exists";
 
+  if (existingCategory) {
+    res
+      .status(400)
+      .json({ message: "category with the same name already exists" });
+  }
   let category = await prisma.category.findUnique({ where: { cuid } });
-  if (!category) throw "this category does not exist";
-  category = await prisma.category.update({ where: { cuid }, data: { name } });
+  if (!category) {
+    res.status(400).json({ message: "this category does not exist" });
+  } else {
+    category = await prisma.category.update({
+      where: { cuid },
+      data: { name },
+    });
 
-  res.status(200).json(category);
+    res.status(200).json(category);
+  }
 };
 
 // DELETE
 const deleteCategory = async (req, res) => {
   const { cuid } = req.params;
   let category = await prisma.category.findUnique({ where: { cuid } });
-  if (!category) throw "this category does not exist";
-  category = await prisma.category.delete({ where: { cuid } });
-
-  res.status(200).json({ category: "deleted" });
+  if (!category) {
+    res.status(400).json({ message: "this category does not exist" });
+  } else {
+    category = await prisma.category.delete({ where: { cuid } });
+    res.status(200).json({ category: "deleted" });
+  }
 };
 
 module.exports = {

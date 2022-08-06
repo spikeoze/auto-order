@@ -6,13 +6,13 @@ const {
   postProducts,
   getProducts,
   updateProducts,
-  deleteProducts
+  deleteProducts,
 } = require("../controller/products");
 
 const {
   productsValidateRules,
-  checkForValidation,
-} = require("../middleware/products");
+  schemaValidatorMiddlewere,
+} = require("../middleware/validateschemas");
 
 // GET
 productsRouter.get("/products", asyncHandler(getProducts));
@@ -20,22 +20,17 @@ productsRouter.get("/products", asyncHandler(getProducts));
 // POST
 productsRouter.post(
   "/products",
-  productsValidateRules,
-  checkForValidation,
+  schemaValidatorMiddlewere(productsValidateRules),
   asyncHandler(postProducts)
 );
 
 // PUT
 productsRouter.put(
   "/products/:cuid",
-  productsValidateRules,
-  checkForValidation,
+  schemaValidatorMiddlewere(productsValidateRules),
   asyncHandler(updateProducts)
 );
 // DELETE
-productsRouter.delete(
-  "/products/:cuid",
-  asyncHandler(deleteProducts)
-);
+productsRouter.delete("/products/:cuid", asyncHandler(deleteProducts));
 
 module.exports = productsRouter;
